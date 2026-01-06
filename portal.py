@@ -98,8 +98,9 @@ APPS = [
     }
 ]
 
-# --- Sistema de Login ---
+# --- Sistema de Login Seguro ---
 def check_password():
+    """Retorna True se o usuário estiver logado."""
     if "password_correct" not in st.session_state:
         st.session_state.password_correct = False
 
@@ -111,12 +112,15 @@ def check_password():
     st.markdown(f"<div style='text-align: center; font-size: 2.5rem; letter-spacing: 2px;'>DEV.JUR <span class='highlight'>OS</span></div>", unsafe_allow_html=True)
     st.markdown("<p style='text-align: center; opacity: 0.6; font-size: 0.8rem;'>SECURE ACCESS TERMINAL</p>", unsafe_allow_html=True)
     
-    # Colunas para centralizar o input
     col1, col2, col3 = st.columns([1,2,1])
     with col2:
         password = st.text_input("PASSWORD", type="password", label_visibility="collapsed", placeholder="Insira a chave de acesso...")
         if st.button("AUTHENTICATE", use_container_width=True):
-            if password == "admin": 
+            # AQUI ESTÁ A MUDANÇA: Buscamos a senha nos segredos do Streamlit
+            # Se estiver rodando local sem configurar secrets, usa uma senha padrão de fallback
+            senha_secreta = st.secrets["PASSWORD"] if "PASSWORD" in st.secrets else "admin"
+            
+            if password == senha_secreta: 
                 st.session_state.password_correct = True
                 st.rerun()
             else:
