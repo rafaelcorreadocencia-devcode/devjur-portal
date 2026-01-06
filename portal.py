@@ -1,7 +1,6 @@
 import streamlit as st
 
 # --- Configuração da Página ---
-# Layout "wide" para ocupar a tela toda
 st.set_page_config(
     page_title="Dev.Jur OS",
     page_icon="⚖️",
@@ -9,14 +8,12 @@ st.set_page_config(
 )
 
 # --- IMAGENS ---
-# Imagem de Fundo (Tecnologia/Dados)
 BACKGROUND_IMAGE = "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop"
 
-# --- CORREÇÃO AQUI: Imagem Estável (Circuitos Verdes/Cyberpunk) ---
-# Link direto e público do Unsplash (não expira)
-CARD_HEADER_IMAGE = "https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=1740&auto=format&fit=crop"
+# --- NOVA IMAGEM (Mais tecnológica, alinhada às cores e agressiva) ---
+CARD_HEADER_IMAGE = "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=2070&auto=format&fit=crop"
 
-# --- INJEÇÃO DE CSS (V3.2 - Estável) ---
+# --- INJEÇÃO DE CSS (V3.3 - Correção Full-Bleed e Nova Imagem) ---
 st.markdown(f"""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400;700&display=swap');
@@ -59,19 +56,20 @@ st.markdown(f"""
         background-color: transparent !important;
     }}
     
-    /* --- CARDS TECNOLÓGICOS --- */
+    /* --- CARDS TECNOLÓGICOS (ESTRUTURA CORRIGIDA) --- */
     .tech-card {{
         background: rgba(20, 30, 50, 0.6);
         backdrop-filter: blur(15px);
         border: 2px solid #4ADE80;
         box-shadow: 0 0 15px rgba(74, 222, 128, 0.2), inset 0 0 15px rgba(74, 222, 128, 0.1);
         border-radius: 12px;
-        overflow: hidden;
+        overflow: hidden; /* Essencial para cortar a imagem nas quinas arredondadas */
         transition: all 0.3s ease;
         height: 100%;
         display: flex;
         flex-direction: column;
         margin-bottom: 20px;
+        padding: 0 !important; /* CRUCIAL: Garante que não há espaço entre a borda e a imagem */
     }}
     
     .tech-card:hover {{
@@ -79,18 +77,23 @@ st.markdown(f"""
         box-shadow: 0 0 30px rgba(74, 222, 128, 0.5), inset 0 0 20px rgba(74, 222, 128, 0.2);
     }}
 
+    /* Container da imagem */
     .card-image-container {{
-        height: 160px;
-        overflow: hidden;
+        height: 180px; /* Um pouco mais alta para impor presença */
+        width: 100%;
+        margin: 0;
+        padding: 0;
         position: relative;
-        border-bottom: 1px solid rgba(74, 222, 128, 0.3);
+        border-bottom: 2px solid #4ADE80; /* Linha divisória verde */
     }}
     
+    /* A imagem em si */
     .card-image {{
         width: 100%;
         height: 100%;
-        object-fit: cover;
-        opacity: 0.8;
+        object-fit: cover; /* Faz a imagem preencher todo o espaço sem distorcer */
+        display: block; /* Remove espaços fantasmas abaixo da imagem */
+        opacity: 0.85;
         transition: opacity 0.3s, transform 0.5s;
     }}
     .tech-card:hover .card-image {{
@@ -98,8 +101,9 @@ st.markdown(f"""
         transform: scale(1.05);
     }}
     
+    /* Área de conteúdo (Texto e Botão) - Onde o padding deve estar */
     .card-content {{
-        padding: 20px;
+        padding: 25px; /* Espaçamento interno só aqui */
         flex-grow: 1;
         display: flex;
         flex-direction: column;
@@ -120,7 +124,7 @@ st.markdown(f"""
         cursor: pointer;
         transition: all 0.3s ease;
         width: 100%;
-        margin-top: 20px;
+        margin-top: 25px;
         text-decoration: none;
         display: inline-block;
         text-align: center;
@@ -133,7 +137,7 @@ st.markdown(f"""
         box-shadow: 0 0 30px rgba(74, 222, 128, 0.7);
     }}
 
-    /* --- INPUT SENHA --- */
+    /* --- INPUT SENHA e BOTÃO LOGIN --- */
     input[type="password"] {{
         background-color: rgba(15, 23, 42, 0.9) !important;
         color: #4ADE80 !important;
@@ -148,7 +152,6 @@ st.markdown(f"""
         outline: none;
     }}
 
-    /* --- BOTÃO LOGIN (CSS FORCE) --- */
     div[data-testid="stFormButton"] > button {{
         background-color: transparent !important;
         color: #4ADE80 !important;
@@ -209,7 +212,7 @@ def check_password():
     with col_login:
         st.markdown("<br><br>", unsafe_allow_html=True)
         st.markdown(f"<div style='text-align: center; font-size: 3rem; letter-spacing: 4px; text-shadow: 0 0 20px rgba(74,222,128,0.5);'>DEV.JUR <span class='highlight'>OS</span></div>", unsafe_allow_html=True)
-        st.markdown("<p style='text-align: center; opacity: 0.8; font-size: 0.9rem; letter-spacing: 2px; margin-bottom: 40px;'>SECURE ACCESS TERMINAL // V3.2</p>", unsafe_allow_html=True)
+        st.markdown("<p style='text-align: center; opacity: 0.8; font-size: 0.9rem; letter-spacing: 2px; margin-bottom: 40px;'>SECURE ACCESS TERMINAL // V3.3</p>", unsafe_allow_html=True)
         
         with st.form("login_form"):
             password = st.text_input("SENHA", type="password", label_visibility="collapsed", placeholder=">> INSERIR CHAVE DE ACESSO <<")
@@ -234,7 +237,7 @@ if check_password():
         </div>
         <div style='text-align:right;'>
             <strong style="font-size: 1.2rem;">DEV.JUR CORE</strong><br>
-            <span style='font-size: 0.8rem; opacity: 0.8; letter-spacing: 1px;'>V 3.2 STABLE</span>
+            <span style='font-size: 0.8rem; opacity: 0.8; letter-spacing: 1px;'>V 3.3 FULL-BLEED</span>
         </div>
     </div>
     """, unsafe_allow_html=True)
