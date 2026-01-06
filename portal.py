@@ -10,22 +10,21 @@ st.set_page_config(
 # --- URL da Imagem de Fundo ---
 BACKGROUND_IMAGE = "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop"
 
-# --- INJEÇÃO DE CSS (Visual Matrix Ajustado) ---
+# --- INJEÇÃO DE CSS (Visual Matrix - Correção Botões) ---
 st.markdown(f"""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400;700&display=swap');
 
-    /* Fundo */
+    /* --- FUNDO E TIPOGRAFIA GERAL --- */
     .stApp {{
-        background-image: linear-gradient(rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 0.9)), url('{BACKGROUND_IMAGE}');
+        background-image: linear-gradient(rgba(15, 23, 42, 0.95), rgba(15, 23, 42, 0.95)), url('{BACKGROUND_IMAGE}');
         background-size: cover;
         background-position: center;
         background-attachment: fixed;
         font-family: 'Roboto Mono', monospace;
     }}
 
-    /* Textos */
-    h1, h2, h3, p, div, span {{
+    h1, h2, h3, p, div, span, label {{
         color: #E2E8F0 !important;
         font-family: 'Roboto Mono', monospace !important;
     }}
@@ -39,52 +38,72 @@ st.markdown(f"""
         background-color: transparent !important;
     }}
     
-    /* Card Glassmorphism */
+    /* --- CARDS --- */
     .app-card {{
-        background: rgba(30, 41, 59, 0.7);
+        background: rgba(30, 41, 59, 0.6);
         backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(74, 222, 128, 0.2);
         border-left: 4px solid #4ADE80;
         padding: 25px;
         margin-bottom: 20px;
         border-radius: 8px;
-        transition: transform 0.2s ease;
+        transition: all 0.3s ease;
     }}
     
     .app-card:hover {{
-        transform: translateY(-2px);
+        transform: translateY(-3px);
         border-color: #4ADE80;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
     }}
 
-    /* --- AJUSTE CRÍTICO: Estilizando o Link Button --- */
-    /* Isso garante que o st.link_button fique igual ao st.button */
-    a[data-testid="stLinkButton"] {{
+    /* --- CORREÇÃO AGRESSIVA DOS BOTÕES (Link e Normal) --- */
+    /* Alvo: Botão de Link (a) e Botão Normal (button) */
+    a[data-testid="stLinkButton"], .stButton > button {{
         background-color: transparent !important;
-        color: #4ADE80 !important;
+        color: #4ADE80 !important; /* Verde Neon */
         border: 1px solid #4ADE80 !important;
         border-radius: 4px !important;
         font-family: 'Roboto Mono', monospace !important;
         letter-spacing: 1px !important;
         text-transform: uppercase !important;
-        transition: all 0.3s !important;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
         text-decoration: none !important;
         display: flex !important;
         justify-content: center !important;
         align-items: center !important;
+        font-weight: 700 !important;
+        box-shadow: none !important;
+    }}
+
+    /* Garante que qualquer texto dentro do botão também seja verde */
+    a[data-testid="stLinkButton"] *, .stButton > button * {{
+         color: #4ADE80 !important;
     }}
     
-    a[data-testid="stLinkButton"]:hover {{
-        background-color: #4ADE80 !important;
-        color: #0F172A !important;
-        box-shadow: 0 0 15px rgba(74, 222, 128, 0.4) !important;
+    /* Estado HOVER (Ao passar o mouse) */
+    a[data-testid="stLinkButton"]:hover, .stButton > button:hover {{
+        background-color: #4ADE80 !important; /* Fundo Verde */
+        color: #0F172A !important; /* Texto Escuro */
         border-color: #4ADE80 !important;
+        box-shadow: 0 0 25px rgba(74, 222, 128, 0.5) !important; /* Glow Neon */
+        transform: scale(1.02);
+    }}
+
+    /* Garante texto escuro no hover */
+    a[data-testid="stLinkButton"]:hover *, .stButton > button:hover * {{
+         color: #0F172A !important;
     }}
     
-    /* Input Senha */
+    /* --- INPUTS --- */
     input {{
-        background-color: rgba(0,0,0,0.5) !important;
+        background-color: rgba(15, 23, 42, 0.8) !important;
         color: #4ADE80 !important;
-        border: 1px solid #333 !important;
+        border: 1px solid rgba(74, 222, 128, 0.3) !important;
+        border-radius: 4px !important;
+    }}
+    input:focus {{
+        border-color: #4ADE80 !important;
+        box-shadow: 0 0 10px rgba(74, 222, 128, 0.2) !important;
     }}
 </style>
 """, unsafe_allow_html=True)
@@ -108,49 +127,53 @@ def check_password():
         return True
 
     st.markdown("<br><br><br>", unsafe_allow_html=True)
-    st.markdown(f"<div style='text-align: center; font-size: 2.5rem; letter-spacing: 2px;'>DEV.JUR <span class='highlight'>OS</span></div>", unsafe_allow_html=True)
-    st.markdown("<p style='text-align: center; opacity: 0.6; font-size: 0.8rem;'>SECURE ACCESS TERMINAL</p>", unsafe_allow_html=True)
+    st.markdown(f"<div style='text-align: center; font-size: 2.5rem; letter-spacing: 2px; text-shadow: 0 0 10px rgba(74,222,128,0.3);'>DEV.JUR <span class='highlight'>OS</span></div>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align: center; opacity: 0.6; font-size: 0.8rem; letter-spacing: 1px;'>SECURE ACCESS TERMINAL // V2.3</p>", unsafe_allow_html=True)
     
     col1, col2, col3 = st.columns([1,2,1])
     with col2:
-        password = st.text_input("PASSWORD", type="password", label_visibility="collapsed", placeholder="Insira a chave de acesso...")
+        password = st.text_input("PASSWORD", type="password", label_visibility="collapsed", placeholder=">> INSIRA A CHAVE DE ACESSO <<")
+        st.markdown("<br>", unsafe_allow_html=True)
         if st.button("AUTHENTICATE", use_container_width=True):
-            # Tenta ler do Secrets, se falhar usa admin
             senha_secreta = st.secrets["PASSWORD"] if "PASSWORD" in st.secrets else "admin"
             
             if password == senha_secreta: 
                 st.session_state.password_correct = True
                 st.rerun()
             else:
-                st.error("ACCESS DENIED")
+                st.error("ACCESS DENIED // TENTATIVA REGISTRADA")
     return False
 
 # --- Renderização do Dashboard ---
 if check_password():
     st.markdown(f"""
-    <div style='display:flex; justify-content:space-between; align-items:center; margin-bottom: 30px;'>
+    <div style='display:flex; justify-content:space-between; align-items:center; margin-bottom: 30px; border-bottom: 1px solid rgba(74,222,128,0.2); padding-bottom: 10px;'>
         <div>
-            <span class='highlight'>STATUS:</span> ONLINE<br>
-            <span style='font-size: 0.8rem; opacity: 0.7;'>SERVER: CLOUD NODE</span>
+            <span class='highlight'>STATUS:</span> <span style='text-shadow: 0 0 5px rgba(74,222,128,0.5);'>ONLINE</span><br>
+            <span style='font-size: 0.7rem; opacity: 0.7; letter-spacing: 1px;'>SERVER: CLOUD NODE JS-1</span>
         </div>
         <div style='text-align:right;'>
             DEV.JUR<br>
-            <span style='font-size: 0.8rem; opacity: 0.7;'>V 2.2</span>
+            <span style='font-size: 0.7rem; opacity: 0.7; letter-spacing: 1px;'>V 2.3 STABLE</span>
         </div>
     </div>
     """, unsafe_allow_html=True)
     
-    st.markdown("<h3 style='text-align: center; margin-bottom: 30px;'>SELECIONE O MÓDULO</h3>", unsafe_allow_html=True)
+    st.markdown("<h3 style='text-align: center; margin-bottom: 30px; letter-spacing: 2px;'>SELECIONE O MÓDULO</h3>", unsafe_allow_html=True)
 
     for app in APPS:
         st.markdown(f"""
         <div class="app-card">
-            <div style="font-size: 1.3rem; margin-bottom: 8px;">{app['icon']} <strong>{app['nome']}</strong></div>
-            <p style="font-size: 0.9rem; opacity: 0.8; margin-bottom: 0;">{app['desc']}</p>
+            <div style="font-size: 1.3rem; margin-bottom: 8px; display: flex; align-items: center;">
+                <span style="margin-right: 10px;">{app['icon']}</span> 
+                <strong style="letter-spacing: 1px;">{app['nome']}</strong>
+            </div>
+            <p style="font-size: 0.9rem; opacity: 0.8; margin-bottom: 20px; line-height: 1.4;">{app['desc']}</p>
         </div>
         """, unsafe_allow_html=True)
         
-        # --- MUDANÇA AQUI: Usando Link Button Nativo ---
+        # Botão de Link com estilo corrigido
         st.link_button(f"INICIAR SISTEMA", app['url'], use_container_width=True)
+        st.markdown("<br>", unsafe_allow_html=True) # Espaço extra
 
-    st.markdown("<br><br><div style='text-align: center; font-size: 0.7rem; opacity: 0.4; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;'>CURATOR MODULE | DEV.JUR ARCHITECTURE</div>", unsafe_allow_html=True)
+    st.markdown("<br><div style='text-align: center; font-size: 0.7rem; opacity: 0.4; border-top: 1px solid rgba(74,222,128,0.1); padding-top: 20px; letter-spacing: 1px;'>CURATOR MODULE | DEV.JUR ARCHITECTURE | ENCRYPTED</div>", unsafe_allow_html=True)
