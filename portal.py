@@ -1,113 +1,153 @@
 import streamlit as st
 
 # --- Configuração da Página ---
+# O layout DEVE ser "wide" para caber dois cards lado a lado confortavelmente
 st.set_page_config(
     page_title="Dev.Jur OS",
     page_icon="⚖️",
-    layout="centered"
+    layout="wide" 
 )
 
-# --- URL da Imagem de Fundo ---
+# --- Imagens (Fundo e Robô) ---
 BACKGROUND_IMAGE = "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop"
+# Imagem de robô genérica para os cards (estilo cyberpunk)
+ROBOT_IMAGE = "https://images.unsplash.com/photo-1535378917042-10a22c95931a?q=80&w=1000&auto=format&fit=crop"
 
-# --- INJEÇÃO DE CSS (Visual Matrix Ultimate) ---
+# --- INJEÇÃO DE CSS (V3.0 - Cyberpunk Grid) ---
 st.markdown(f"""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400;700&display=swap');
 
-    /* --- FUNDO GERAL --- */
+    /* --- FUNDO E TIPOGRAFIA --- */
     .stApp {{
-        background-image: linear-gradient(rgba(15, 23, 42, 0.95), rgba(15, 23, 42, 0.95)), url('{BACKGROUND_IMAGE}');
+        background-image: linear-gradient(rgba(10, 15, 30, 0.95), rgba(10, 15, 30, 0.95)), url('{BACKGROUND_IMAGE}');
         background-size: cover;
         background-position: center;
         background-attachment: fixed;
         font-family: 'Roboto Mono', monospace;
     }}
 
-    /* --- TEXTOS --- */
-    h1, h2, h3, p, div, span, label {{
+    h1, h2, h3, p, div, span, label, b, strong {{
         color: #E2E8F0 !important;
         font-family: 'Roboto Mono', monospace !important;
     }}
     
     .highlight {{
-        color: #4ADE80 !important;
+        color: #4ADE80 !important; /* Verde Neon Principal */
         font-weight: bold;
+        text-shadow: 0 0 10px rgba(74, 222, 128, 0.4);
     }}
 
+    /* Remove espaçamentos extras do Streamlit */
+    .block-container {{
+        padding-top: 2rem;
+        padding-bottom: 5rem;
+    }}
     div[data-testid="stVerticalBlock"] > div[style*="background-color"] {{
         background-color: transparent !important;
     }}
     
-    /* --- CARDS --- */
-    .app-card {{
-        background: rgba(30, 41, 59, 0.6);
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(74, 222, 128, 0.2);
-        border-left: 4px solid #4ADE80;
-        padding: 25px;
-        margin-bottom: 20px;
-        border-radius: 8px;
+    /* --- NOVOS CARDS TECNOLÓGICOS --- */
+    .tech-card {{
+        background: rgba(20, 30, 50, 0.7);
+        backdrop-filter: blur(15px);
+        /* Borda completa verde neon brilhante */
+        border: 2px solid #4ADE80;
+        box-shadow: 0 0 15px rgba(74, 222, 128, 0.2), inset 0 0 15px rgba(74, 222, 128, 0.1);
+        border-radius: 12px;
+        overflow: hidden; /* Para a imagem do robô não sair do card */
         transition: all 0.3s ease;
-    }}
-    .app-card:hover {{
-        transform: translateY(-3px);
-        border-color: #4ADE80;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-    }}
-
-    /* --- BOTÕES (CSS Nuclear) --- */
-    .stButton > button, 
-    a[data-testid="stLinkButton"],
-    a[data-testid="stLinkButton"]:visited,
-    a[data-testid="stLinkButton"]:active,
-    a[data-testid="stLinkButton"]:focus {{
-        background-color: transparent !important;
-        background: transparent !important;
-        color: #4ADE80 !important;
-        border: 1px solid #4ADE80 !important;
-        border-radius: 4px !important;
-        font-family: 'Roboto Mono', monospace !important;
-        font-weight: 700 !important;
-        letter-spacing: 1px !important;
-        text-transform: uppercase !important;
-        text-decoration: none !important;
-        box-shadow: none !important;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-        display: flex !important;
-        justify-content: center !important;
-        align-items: center !important;
-        width: 100% !important;
-    }}
-
-    .stButton > button *, a[data-testid="stLinkButton"] * {{
-         color: #4ADE80 !important;
-         text-decoration: none !important;
+        height: 100%; /* Garante altura igual na grid */
+        display: flex;
+        flex-direction: column;
     }}
     
-    .stButton > button:hover, 
-    a[data-testid="stLinkButton"]:hover {{
-        background-color: #4ADE80 !important;
-        color: #0F172A !important;
-        border-color: #4ADE80 !important;
-        box-shadow: 0 0 20px rgba(74, 222, 128, 0.6) !important;
-        transform: scale(1.02);
+    .tech-card:hover {{
+        transform: translateY(-5px);
+        box-shadow: 0 0 30px rgba(74, 222, 128, 0.5), inset 0 0 20px rgba(74, 222, 128, 0.2);
     }}
 
-    .stButton > button:hover *, a[data-testid="stLinkButton"]:hover * {{
-         color: #0F172A !important;
+    /* Área da imagem do robô */
+    .card-image-container {{
+        height: 150px;
+        overflow: hidden;
+        position: relative;
+        border-bottom: 1px solid rgba(74, 222, 128, 0.3);
     }}
     
+    .card-image {{
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        opacity: 0.8;
+        transition: opacity 0.3s;
+    }}
+    .tech-card:hover .card-image {{
+        opacity: 1;
+    }}
+    
+    /* Área de conteúdo do card */
+    .card-content {{
+        padding: 20px;
+        flex-grow: 1; /* Ocupa o espaço restante */
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }}
+
+    /* --- BOTÃO NEON CUSTOMIZADO (Substitui o nativo) --- */
+    /* Este é um botão HTML puro, garantindo controle total da cor */
+    .neon-button {{
+        background: transparent;
+        color: #4ADE80;
+        border: 2px solid #4ADE80;
+        border-radius: 6px;
+        padding: 12px 24px;
+        font-family: 'Roboto Mono', monospace;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        width: 100%;
+        margin-top: 20px;
+        text-decoration: none;
+        display: inline-block;
+        text-align: center;
+        box-shadow: 0 0 10px rgba(74, 222, 128, 0.2);
+    }}
+    
+    .neon-button:hover {{
+        background: #4ADE80;
+        color: #0A0F1E; /* Fundo escuro quando ativo */
+        box-shadow: 0 0 30px rgba(74, 222, 128, 0.7);
+    }}
+
     /* --- INPUT SENHA --- */
-    input {{
-        background-color: rgba(15, 23, 42, 0.8) !important;
+    input[type="password"] {{
+        background-color: rgba(15, 23, 42, 0.9) !important;
         color: #4ADE80 !important;
-        border: 1px solid rgba(74, 222, 128, 0.3) !important;
+        border: 2px solid rgba(74, 222, 128, 0.4) !important;
+        text-align: center;
+        letter-spacing: 3px;
+        font-weight: bold;
     }}
-    input:focus {{
+    input[type="password"]:focus {{
         border-color: #4ADE80 !important;
-        box-shadow: 0 0 10px rgba(74, 222, 128, 0.2) !important;
+        box-shadow: 0 0 20px rgba(74, 222, 128, 0.4) !important;
+        outline: none;
     }}
+    /* Estiliza o botão de login nativo para combinar */
+    div[data-testid="stFormButton"] > button {{
+         background: transparent !important;
+         border: 2px solid #4ADE80 !important;
+         color: #4ADE80 !important;
+    }}
+    div[data-testid="stFormButton"] > button:hover {{
+         background: #4ADE80 !important;
+         color: #000 !important;
+    }}
+
 </style>
 """, unsafe_allow_html=True)
 
@@ -116,15 +156,16 @@ APPS = [
     {
         "nome": "ARGUS JURÍDICO",
         "url": "https://argus-juridico.vercel.app/",
-        "desc": "Sistema de inteligência para Recursos Especiais.",
+        "desc": "Inteligência artificial para Geração de Recursos Especiais.",
         "icon": "⚖️"
     },
     {
         "nome": "Prof.Rafael.AI",
         "url": "https://rafael-ai-app-grtjcshxodhf7uwnrv4utw.streamlit.app/",
-        "desc": "Sistema de IA para Artigos, Aulas e TCC's",
+        "desc": "Sistema Neural para Artigos, Aulas e TCC's.",
         "icon": "📚"
-    }
+    },
+     # Adicione mais apps aqui, eles se organizarão automaticamente na grid
 ]
 
 # --- Sistema de Login ---
@@ -135,54 +176,74 @@ def check_password():
     if st.session_state.password_correct:
         return True
 
-    st.markdown("<br><br><br>", unsafe_allow_html=True)
-    st.markdown(f"<div style='text-align: center; font-size: 2.5rem; letter-spacing: 2px; text-shadow: 0 0 10px rgba(74,222,128,0.3);'>DEV.JUR <span class='highlight'>OS</span></div>", unsafe_allow_html=True)
-    st.markdown("<p style='text-align: center; opacity: 0.6; font-size: 0.8rem; letter-spacing: 1px;'>SECURE ACCESS TERMINAL</p>", unsafe_allow_html=True)
-    
-    col1, col2, col3 = st.columns([1,2,1])
-    with col2:
-        password = st.text_input("PASSWORD", type="password", label_visibility="collapsed", placeholder=">> INSIRA A CHAVE <<")
-        st.markdown("<br>", unsafe_allow_html=True)
+    # Container centralizado para o login
+    col_spacer_l, col_login, col_spacer_r = st.columns([1, 2, 1])
+    with col_login:
+        st.markdown("<br><br>", unsafe_allow_html=True)
+        st.markdown(f"<div style='text-align: center; font-size: 3rem; letter-spacing: 4px; text-shadow: 0 0 20px rgba(74,222,128,0.5);'>DEV.JUR <span class='highlight'>OS</span></div>", unsafe_allow_html=True)
+        st.markdown("<p style='text-align: center; opacity: 0.8; font-size: 0.9rem; letter-spacing: 2px; margin-bottom: 40px;'>SECURE ACCESS TERMINAL // V3.0</p>", unsafe_allow_html=True)
         
-        if st.button("AUTHENTICATE", use_container_width=True):
-            senha_secreta = st.secrets["PASSWORD"] if "PASSWORD" in st.secrets else "admin"
+        with st.form("login_form"):
+            password = st.text_input("SENHA", type="password", label_visibility="collapsed", placeholder=">> INSERIR CHAVE DE ACESSO <<")
+            submitted = st.form_submit_button("AUTENTICAR SISTEMA", use_container_width=True)
             
-            if password == senha_secreta: 
-                st.session_state.password_correct = True
-                st.rerun()
-            else:
-                st.error("ACCESS DENIED // TENTATIVA REGISTRADA")
+            if submitted:
+                senha_secreta = st.secrets["PASSWORD"] if "PASSWORD" in st.secrets else "admin"
+                if password == senha_secreta: 
+                    st.session_state.password_correct = True
+                    st.rerun()
+                else:
+                    st.error("ERRO: ACESSO NEGADO // TENTATIVA REGISTRADA")
     return False
 
-# --- Renderização do Dashboard ---
+# --- Renderização do Dashboard (Grid System) ---
 if check_password():
+    # Header
     st.markdown(f"""
-    <div style='display:flex; justify-content:space-between; align-items:center; margin-bottom: 30px; border-bottom: 1px solid rgba(74,222,128,0.2); padding-bottom: 10px;'>
+    <div style='display:flex; justify-content:space-between; align-items:center; margin-bottom: 40px; border-bottom: 2px solid rgba(74,222,128,0.3); padding-bottom: 15px;'>
         <div>
-            <span class='highlight'>STATUS:</span> <span style='text-shadow: 0 0 5px rgba(74,222,128,0.5);'>ONLINE</span><br>
-            <span style='font-size: 0.7rem; opacity: 0.7; letter-spacing: 1px;'>SERVER: CLOUD NODE</span>
+            <span class='highlight' style="font-size: 1.2rem;">STATUS: ONLINE</span><br>
+            <span style='font-size: 0.8rem; opacity: 0.8; letter-spacing: 1px;'>REDE NEURAL CONECTADA</span>
         </div>
         <div style='text-align:right;'>
-            DEV.JUR<br>
-            <span style='font-size: 0.7rem; opacity: 0.7; letter-spacing: 1px;'>V 2.5</span>
+            <strong style="font-size: 1.2rem;">DEV.JUR CORE</strong><br>
+            <span style='font-size: 0.8rem; opacity: 0.8; letter-spacing: 1px;'>V 3.0 CYBERPUNK GRID</span>
         </div>
     </div>
     """, unsafe_allow_html=True)
     
-    st.markdown("<h3 style='text-align: center; margin-bottom: 30px; letter-spacing: 2px;'>SELECIONE O MÓDULO</h3>", unsafe_allow_html=True)
+    st.markdown("<h2 style='text-align: center; margin-bottom: 40px; letter-spacing: 3px; text-transform: uppercase;'>Módulos Disponíveis</h2>", unsafe_allow_html=True)
 
-    for app in APPS:
-        st.markdown(f"""
-        <div class="app-card">
-            <div style="font-size: 1.3rem; margin-bottom: 8px; display: flex; align-items: center;">
-                <span style="margin-right: 10px;">{app['icon']}</span> 
-                <strong style="letter-spacing: 1px;">{app['nome']}</strong>
-            </div>
-            <p style="font-size: 0.9rem; opacity: 0.8; margin-bottom: 20px; line-height: 1.4;">{app['desc']}</p>
-        </div>
-        """, unsafe_allow_html=True)
+    # --- LÓGICA DA GRID (Lado a Lado) ---
+    # Cria linhas com 2 colunas cada
+    for i in range(0, len(APPS), 2):
+        cols = st.columns(2) # Define 2 colunas por linha
         
-        st.link_button(f"INICIAR SISTEMA", app['url'], use_container_width=True)
-        st.markdown("<br>", unsafe_allow_html=True)
+        # Processa os apps em pares
+        for j in range(2):
+            if i + j < len(APPS):
+                app = APPS[i+j]
+                with cols[j]:
+                    # ESTRUTURA HTML DO CARD TECNOLÓGICO
+                    st.markdown(f"""
+                    <div class="tech-card">
+                        <div class="card-image-container">
+                            <img src="{ROBOT_IMAGE}" class="card-image">
+                        </div>
+                        <div class="card-content">
+                            <div>
+                                <div style="font-size: 1.4rem; margin-bottom: 10px; display: flex; align-items: center;">
+                                    <span style="margin-right: 12px; filter: drop-shadow(0 0 5px rgba(74,222,128,0.7));">{app['icon']}</span> 
+                                    <strong style="letter-spacing: 1px; color: #4ADE80 !important;">{app['nome']}</strong>
+                                </div>
+                                <p style="font-size: 1rem; opacity: 0.9; line-height: 1.5;">{app['desc']}</p>
+                            </div>
+                            <a href="{app['url']}" target="_blank" style="text-decoration: none;">
+                                <button class="neon-button">INICIAR SISTEMA</button>
+                            </a>
+                        </div>
+                    </div>
+                    """, unsafe_allow_html=True)
 
-    st.markdown("<br><div style='text-align: center; font-size: 0.7rem; opacity: 0.4; border-top: 1px solid rgba(74,222,128,0.1); padding-top: 20px; letter-spacing: 1px;'>CURATOR MODULE | DEV.JUR ARCHITECTURE | ENCRYPTED</div>", unsafe_allow_html=True)
+    # Footer
+    st.markdown("<br><br><div style='text-align: center; font-size: 0.8rem; opacity: 0.6; border-top: 1px solid rgba(74,222,128,0.2); padding-top: 30px; letter-spacing: 2px;'>DEV.JUR ARCHITECTURE | SECURE QUANTUM LINK</div>", unsafe_allow_html=True)
