@@ -1,7 +1,7 @@
 import streamlit as st
 
 # --- Configuração da Página ---
-# Layout "wide" para ocupar a tela toda e permitir cards lado a lado
+# Layout "wide" para ocupar a tela toda
 st.set_page_config(
     page_title="Dev.Jur OS",
     page_icon="⚖️",
@@ -11,25 +11,25 @@ st.set_page_config(
 # --- IMAGENS ---
 # Imagem de Fundo (Tecnologia/Dados)
 BACKGROUND_IMAGE = "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop"
-# Imagem dos Cards (Redes Neurais / IA - Substituindo o robô)
-CARD_HEADER_IMAGE = "https://img.freepik.com/free-photo/neural-network-background-concept_23-2150164226.jpg?t=st=1709738000~exp=1709741600~hmac=e20f0119302684813958999813589139891389"
 
-# --- INJEÇÃO DE CSS (V3.1 - Correções Visuais Definitivas) ---
+# --- CORREÇÃO AQUI: Imagem Estável (Circuitos Verdes/Cyberpunk) ---
+# Link direto e público do Unsplash (não expira)
+CARD_HEADER_IMAGE = "https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=1740&auto=format&fit=crop"
+
+# --- INJEÇÃO DE CSS (V3.2 - Estável) ---
 st.markdown(f"""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400;700&display=swap');
 
-    /* --- 1. ELIMINAÇÃO DA FAIXA BRANCA SUPERIOR (HEADER) --- */
+    /* --- HEADER TRANSPARENTE --- */
     header[data-testid="stHeader"] {{
         background-color: transparent !important;
         background: transparent !important;
         box-shadow: none !important;
     }}
-    /* Pinta os ícones do menu de branco para não sumirem no fundo escuro */
     header[data-testid="stHeader"] * {{
         color: #E2E8F0 !important;
     }}
-    /* Ajusta o espaçamento do topo para o conteúdo não ficar escondido */
     .block-container {{
         padding-top: 1rem !important;
         padding-bottom: 5rem !important;
@@ -50,17 +50,16 @@ st.markdown(f"""
     }}
     
     .highlight {{
-        color: #4ADE80 !important; /* Verde Neon */
+        color: #4ADE80 !important;
         font-weight: bold;
         text-shadow: 0 0 10px rgba(74, 222, 128, 0.4);
     }}
 
-    /* Remove fundos extras dos containers */
     div[data-testid="stVerticalBlock"] > div[style*="background-color"] {{
         background-color: transparent !important;
     }}
     
-    /* --- CARDS TECNOLÓGICOS (GRID) --- */
+    /* --- CARDS TECNOLÓGICOS --- */
     .tech-card {{
         background: rgba(20, 30, 50, 0.6);
         backdrop-filter: blur(15px);
@@ -107,7 +106,7 @@ st.markdown(f"""
         justify-content: space-between;
     }}
 
-    /* --- BOTÃO NEON CUSTOMIZADO (Para os Cards) --- */
+    /* --- BOTÃO NEON --- */
     .neon-button {{
         background: transparent;
         color: #4ADE80;
@@ -149,7 +148,7 @@ st.markdown(f"""
         outline: none;
     }}
 
-    /* --- 2. CORREÇÃO DEFINITIVA DO BOTÃO DE LOGIN (CSS FORCE) --- */
+    /* --- BOTÃO LOGIN (CSS FORCE) --- */
     div[data-testid="stFormButton"] > button {{
         background-color: transparent !important;
         color: #4ADE80 !important;
@@ -165,18 +164,16 @@ st.markdown(f"""
 
     div[data-testid="stFormButton"] > button:hover {{
          background-color: #4ADE80 !important;
-         color: #0A0F1E !important; /* Texto preto/escuro no hover */
+         color: #0A0F1E !important;
          box-shadow: 0 0 30px rgba(74, 222, 128, 0.6) !important;
     }}
     
-    /* Prevenir estado ativo branco */
     div[data-testid="stFormButton"] > button:active,
     div[data-testid="stFormButton"] > button:focus {{
         background-color: transparent !important;
         color: #4ADE80 !important;
         border-color: #4ADE80 !important;
     }}
-
     div[data-testid="stFormButton"] > button * {{
          color: inherit !important;
     }}
@@ -198,7 +195,6 @@ APPS = [
         "desc": "Sistema Neural para Artigos, Aulas e TCC's.",
         "icon": "📚"
     },
-     # Novos apps entram aqui
 ]
 
 # --- Sistema de Login ---
@@ -209,12 +205,11 @@ def check_password():
     if st.session_state.password_correct:
         return True
 
-    # Layout centralizado do Login
     col_spacer_l, col_login, col_spacer_r = st.columns([1.5, 1, 1.5])
     with col_login:
         st.markdown("<br><br>", unsafe_allow_html=True)
         st.markdown(f"<div style='text-align: center; font-size: 3rem; letter-spacing: 4px; text-shadow: 0 0 20px rgba(74,222,128,0.5);'>DEV.JUR <span class='highlight'>OS</span></div>", unsafe_allow_html=True)
-        st.markdown("<p style='text-align: center; opacity: 0.8; font-size: 0.9rem; letter-spacing: 2px; margin-bottom: 40px;'>SECURE ACCESS TERMINAL // V3.1</p>", unsafe_allow_html=True)
+        st.markdown("<p style='text-align: center; opacity: 0.8; font-size: 0.9rem; letter-spacing: 2px; margin-bottom: 40px;'>SECURE ACCESS TERMINAL // V3.2</p>", unsafe_allow_html=True)
         
         with st.form("login_form"):
             password = st.text_input("SENHA", type="password", label_visibility="collapsed", placeholder=">> INSERIR CHAVE DE ACESSO <<")
@@ -229,9 +224,8 @@ def check_password():
                     st.error("ERRO: ACESSO NEGADO")
     return False
 
-# --- Renderização do Dashboard (Grid System) ---
+# --- Dashboard ---
 if check_password():
-    # Header
     st.markdown(f"""
     <div style='display:flex; justify-content:space-between; align-items:center; margin-bottom: 40px; border-bottom: 2px solid rgba(74,222,128,0.3); padding-bottom: 15px;'>
         <div>
@@ -240,14 +234,13 @@ if check_password():
         </div>
         <div style='text-align:right;'>
             <strong style="font-size: 1.2rem;">DEV.JUR CORE</strong><br>
-            <span style='font-size: 0.8rem; opacity: 0.8; letter-spacing: 1px;'>V 3.1 CYBERPUNK GRID</span>
+            <span style='font-size: 0.8rem; opacity: 0.8; letter-spacing: 1px;'>V 3.2 STABLE</span>
         </div>
     </div>
     """, unsafe_allow_html=True)
     
     st.markdown("<h2 style='text-align: center; margin-bottom: 40px; letter-spacing: 3px; text-transform: uppercase;'>Módulos Disponíveis</h2>", unsafe_allow_html=True)
 
-    # --- LÓGICA DA GRID (Lado a Lado) ---
     for i in range(0, len(APPS), 2):
         cols = st.columns(2)
         for j in range(2):
