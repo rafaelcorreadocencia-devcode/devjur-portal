@@ -9,11 +9,10 @@ st.set_page_config(
 
 # --- IMAGENS ---
 BACKGROUND_IMAGE = "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop"
-
-# --- NOVA IMAGEM (Mais tecnológica, alinhada às cores e agressiva) ---
+# Imagem Cyberpunk (Dados/Matrix)
 CARD_HEADER_IMAGE = "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=2070&auto=format&fit=crop"
 
-# --- INJEÇÃO DE CSS (V3.3 - Correção Full-Bleed e Nova Imagem) ---
+# --- INJEÇÃO DE CSS (V3.4 - Correção Edge-to-Edge) ---
 st.markdown(f"""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400;700&display=swap');
@@ -56,20 +55,22 @@ st.markdown(f"""
         background-color: transparent !important;
     }}
     
-    /* --- CARDS TECNOLÓGICOS (ESTRUTURA CORRIGIDA) --- */
+    /* --- CARDS TECNOLÓGICOS --- */
     .tech-card {{
         background: rgba(20, 30, 50, 0.6);
         backdrop-filter: blur(15px);
         border: 2px solid #4ADE80;
         box-shadow: 0 0 15px rgba(74, 222, 128, 0.2), inset 0 0 15px rgba(74, 222, 128, 0.1);
         border-radius: 12px;
-        overflow: hidden; /* Essencial para cortar a imagem nas quinas arredondadas */
+        /* Overflow hidden é essencial para cortar a imagem nas quinas arredondadas */
+        overflow: hidden !important; 
         transition: all 0.3s ease;
         height: 100%;
         display: flex;
         flex-direction: column;
         margin-bottom: 20px;
-        padding: 0 !important; /* CRUCIAL: Garante que não há espaço entre a borda e a imagem */
+        /* GARANTE ZERO ESPAÇAMENTO INTERNO NA BORDA */
+        padding: 0 !important; 
     }}
     
     .tech-card:hover {{
@@ -77,22 +78,29 @@ st.markdown(f"""
         box-shadow: 0 0 30px rgba(74, 222, 128, 0.5), inset 0 0 20px rgba(74, 222, 128, 0.2);
     }}
 
+    /* --- CORREÇÃO PRINCIPAL: IMAGEM EDGE-TO-EDGE --- */
     /* Container da imagem */
     .card-image-container {{
-        height: 180px; /* Um pouco mais alta para impor presença */
-        width: 100%;
-        margin: 0;
-        padding: 0;
+        height: 180px;
+        /* Força largura total */
+        width: 100% !important; 
+        margin: 0 !important;
+        padding: 0 !important;
         position: relative;
-        border-bottom: 2px solid #4ADE80; /* Linha divisória verde */
+        border-bottom: 2px solid #4ADE80;
+        display: flex !important; /* Garante comportamento de bloco flexível */
     }}
     
     /* A imagem em si */
     .card-image {{
-        width: 100%;
-        height: 100%;
-        object-fit: cover; /* Faz a imagem preencher todo o espaço sem distorcer */
-        display: block; /* Remove espaços fantasmas abaixo da imagem */
+        /* Força a imagem a ocupar 100% do container */
+        width: 100% !important;
+        height: 100% !important;
+        /* Garante que a imagem cubra tudo sem distorcer */
+        object-fit: cover !important; 
+        display: block !important;
+        margin: 0 !important;
+        padding: 0 !important;
         opacity: 0.85;
         transition: opacity 0.3s, transform 0.5s;
     }}
@@ -103,7 +111,7 @@ st.markdown(f"""
     
     /* Área de conteúdo (Texto e Botão) - Onde o padding deve estar */
     .card-content {{
-        padding: 25px; /* Espaçamento interno só aqui */
+        padding: 25px; /* Espaçamento interno só aqui embaixo */
         flex-grow: 1;
         display: flex;
         flex-direction: column;
@@ -212,7 +220,7 @@ def check_password():
     with col_login:
         st.markdown("<br><br>", unsafe_allow_html=True)
         st.markdown(f"<div style='text-align: center; font-size: 3rem; letter-spacing: 4px; text-shadow: 0 0 20px rgba(74,222,128,0.5);'>DEV.JUR <span class='highlight'>OS</span></div>", unsafe_allow_html=True)
-        st.markdown("<p style='text-align: center; opacity: 0.8; font-size: 0.9rem; letter-spacing: 2px; margin-bottom: 40px;'>SECURE ACCESS TERMINAL // V3.3</p>", unsafe_allow_html=True)
+        st.markdown("<p style='text-align: center; opacity: 0.8; font-size: 0.9rem; letter-spacing: 2px; margin-bottom: 40px;'>SECURE ACCESS TERMINAL // V3.4</p>", unsafe_allow_html=True)
         
         with st.form("login_form"):
             password = st.text_input("SENHA", type="password", label_visibility="collapsed", placeholder=">> INSERIR CHAVE DE ACESSO <<")
@@ -237,7 +245,7 @@ if check_password():
         </div>
         <div style='text-align:right;'>
             <strong style="font-size: 1.2rem;">DEV.JUR CORE</strong><br>
-            <span style='font-size: 0.8rem; opacity: 0.8; letter-spacing: 1px;'>V 3.3 FULL-BLEED</span>
+            <span style='font-size: 0.8rem; opacity: 0.8; letter-spacing: 1px;'>V 3.4 EDGE-TO-EDGE</span>
         </div>
     </div>
     """, unsafe_allow_html=True)
