@@ -1,7 +1,6 @@
 import streamlit as st
-import webbrowser
 
-# --- Configuração da Página (OBRIGATÓRIO SER A PRIMEIRA LINHA) ---
+# --- Configuração da Página ---
 st.set_page_config(
     page_title="Dev.Jur OS",
     page_icon="⚖️",
@@ -9,18 +8,15 @@ st.set_page_config(
 )
 
 # --- URL da Imagem de Fundo ---
-# Você pode trocar esse link por qualquer imagem que gostar da internet
 BACKGROUND_IMAGE = "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop"
 
-# --- INJEÇÃO DE CSS (Design Sofisticado) ---
+# --- INJEÇÃO DE CSS (Visual Matrix Ajustado) ---
 st.markdown(f"""
 <style>
-    /* Importando fonte tecnológica limpa */
     @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400;700&display=swap');
 
-    /* Configuração do Fundo com Imagem + Máscara Escura */
+    /* Fundo */
     .stApp {{
-        /* A primeira parte é um gradiente preto semi-transparente para escurecer a imagem */
         background-image: linear-gradient(rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 0.9)), url('{BACKGROUND_IMAGE}');
         background-size: cover;
         background-position: center;
@@ -28,58 +24,63 @@ st.markdown(f"""
         font-family: 'Roboto Mono', monospace;
     }}
 
-    /* Títulos e Textos */
+    /* Textos */
     h1, h2, h3, p, div, span {{
-        color: #E2E8F0 !important; /* Cinza claro, quase branco, mais suave que branco puro */
+        color: #E2E8F0 !important;
         font-family: 'Roboto Mono', monospace !important;
     }}
     
-    /* Destaque Verde (Mais sutil e elegante agora) */
     .highlight {{
-        color: #4ADE80 !important; /* Um verde mais pastel/suave, menos neon agressivo */
+        color: #4ADE80 !important;
         font-weight: bold;
     }}
 
-    /* Remove fundos padrões do Streamlit */
     div[data-testid="stVerticalBlock"] > div[style*="background-color"] {{
         background-color: transparent !important;
     }}
     
-    /* Card com Efeito de Vidro (Glassmorphism) */
+    /* Card Glassmorphism */
     .app-card {{
-        background: rgba(30, 41, 59, 0.7); /* Cinza azulado transparente */
-        backdrop-filter: blur(10px); /* O desfoque que cria o efeito de vidro */
+        background: rgba(30, 41, 59, 0.7);
+        backdrop-filter: blur(10px);
         border: 1px solid rgba(255, 255, 255, 0.1);
         border-left: 4px solid #4ADE80;
         padding: 25px;
         margin-bottom: 20px;
         border-radius: 8px;
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        transition: transform 0.2s ease;
     }}
     
     .app-card:hover {{
         transform: translateY(-2px);
-        box-shadow: 0 10px 20px rgba(0,0,0,0.3);
         border-color: #4ADE80;
     }}
 
-    /* Estilização dos Botões */
-    .stButton button {{
-        background-color: transparent;
-        color: #4ADE80;
-        border: 1px solid #4ADE80;
-        border-radius: 4px;
-        font-family: 'Roboto Mono', monospace;
-        letter-spacing: 1px;
-        transition: all 0.3s;
-    }}
-    .stButton button:hover {{
-        background-color: #4ADE80;
-        color: #0F172A; /* Cor escura do fundo */
-        box-shadow: 0 0 10px rgba(74, 222, 128, 0.4);
+    /* --- AJUSTE CRÍTICO: Estilizando o Link Button --- */
+    /* Isso garante que o st.link_button fique igual ao st.button */
+    a[data-testid="stLinkButton"] {{
+        background-color: transparent !important;
+        color: #4ADE80 !important;
+        border: 1px solid #4ADE80 !important;
+        border-radius: 4px !important;
+        font-family: 'Roboto Mono', monospace !important;
+        letter-spacing: 1px !important;
+        text-transform: uppercase !important;
+        transition: all 0.3s !important;
+        text-decoration: none !important;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
     }}
     
-    /* Input de Senha */
+    a[data-testid="stLinkButton"]:hover {{
+        background-color: #4ADE80 !important;
+        color: #0F172A !important;
+        box-shadow: 0 0 15px rgba(74, 222, 128, 0.4) !important;
+        border-color: #4ADE80 !important;
+    }}
+    
+    /* Input Senha */
     input {{
         background-color: rgba(0,0,0,0.5) !important;
         color: #4ADE80 !important;
@@ -98,16 +99,14 @@ APPS = [
     }
 ]
 
-# --- Sistema de Login Seguro ---
+# --- Sistema de Login ---
 def check_password():
-    """Retorna True se o usuário estiver logado."""
     if "password_correct" not in st.session_state:
         st.session_state.password_correct = False
 
     if st.session_state.password_correct:
         return True
 
-    # Tela de Login Minimalista
     st.markdown("<br><br><br>", unsafe_allow_html=True)
     st.markdown(f"<div style='text-align: center; font-size: 2.5rem; letter-spacing: 2px;'>DEV.JUR <span class='highlight'>OS</span></div>", unsafe_allow_html=True)
     st.markdown("<p style='text-align: center; opacity: 0.6; font-size: 0.8rem;'>SECURE ACCESS TERMINAL</p>", unsafe_allow_html=True)
@@ -116,8 +115,7 @@ def check_password():
     with col2:
         password = st.text_input("PASSWORD", type="password", label_visibility="collapsed", placeholder="Insira a chave de acesso...")
         if st.button("AUTHENTICATE", use_container_width=True):
-            # AQUI ESTÁ A MUDANÇA: Buscamos a senha nos segredos do Streamlit
-            # Se estiver rodando local sem configurar secrets, usa uma senha padrão de fallback
+            # Tenta ler do Secrets, se falhar usa admin
             senha_secreta = st.secrets["PASSWORD"] if "PASSWORD" in st.secrets else "admin"
             
             if password == senha_secreta: 
@@ -129,16 +127,15 @@ def check_password():
 
 # --- Renderização do Dashboard ---
 if check_password():
-    # Cabeçalho
     st.markdown(f"""
     <div style='display:flex; justify-content:space-between; align-items:center; margin-bottom: 30px;'>
         <div>
             <span class='highlight'>STATUS:</span> ONLINE<br>
-            <span style='font-size: 0.8rem; opacity: 0.7;'>SERVER: LOCALHOST</span>
+            <span style='font-size: 0.8rem; opacity: 0.7;'>SERVER: CLOUD NODE</span>
         </div>
         <div style='text-align:right;'>
             DEV.JUR<br>
-            <span style='font-size: 0.8rem; opacity: 0.7;'>V 2.1</span>
+            <span style='font-size: 0.8rem; opacity: 0.7;'>V 2.2</span>
         </div>
     </div>
     """, unsafe_allow_html=True)
@@ -146,7 +143,6 @@ if check_password():
     st.markdown("<h3 style='text-align: center; margin-bottom: 30px;'>SELECIONE O MÓDULO</h3>", unsafe_allow_html=True)
 
     for app in APPS:
-        # Card Visual
         st.markdown(f"""
         <div class="app-card">
             <div style="font-size: 1.3rem; margin-bottom: 8px;">{app['icon']} <strong>{app['nome']}</strong></div>
@@ -154,9 +150,7 @@ if check_password():
         </div>
         """, unsafe_allow_html=True)
         
-        # Botão Funcional
-        if st.button(f"INICIAR SISTEMA", key=app['nome'], use_container_width=True):
-             webbrowser.open_new_tab(app['url'])
+        # --- MUDANÇA AQUI: Usando Link Button Nativo ---
+        st.link_button(f"INICIAR SISTEMA", app['url'], use_container_width=True)
 
-    # Rodapé
     st.markdown("<br><br><div style='text-align: center; font-size: 0.7rem; opacity: 0.4; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;'>CURATOR MODULE | DEV.JUR ARCHITECTURE</div>", unsafe_allow_html=True)
