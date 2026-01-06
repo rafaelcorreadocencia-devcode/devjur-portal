@@ -1,26 +1,43 @@
 import streamlit as st
 
 # --- Configuração da Página ---
-# O layout DEVE ser "wide" para caber dois cards lado a lado confortavelmente
+# Layout "wide" para ocupar a tela toda e permitir cards lado a lado
 st.set_page_config(
     page_title="Dev.Jur OS",
     page_icon="⚖️",
     layout="wide" 
 )
 
-# --- Imagens (Fundo e Robô) ---
+# --- IMAGENS ---
+# Imagem de Fundo (Tecnologia/Dados)
 BACKGROUND_IMAGE = "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop"
-# Imagem de robô genérica para os cards (estilo cyberpunk)
-ROBOT_IMAGE = "https://images.unsplash.com/photo-1535378917042-10a22c95931a?q=80&w=1000&auto=format&fit=crop"
+# Imagem dos Cards (Redes Neurais / IA - Substituindo o robô)
+CARD_HEADER_IMAGE = "https://img.freepik.com/free-photo/neural-network-background-concept_23-2150164226.jpg?t=st=1709738000~exp=1709741600~hmac=e20f0119302684813958999813589139891389"
 
-# --- INJEÇÃO DE CSS (V3.0 - Cyberpunk Grid) ---
+# --- INJEÇÃO DE CSS (V3.1 - Correções Visuais Definitivas) ---
 st.markdown(f"""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400;700&display=swap');
 
+    /* --- 1. ELIMINAÇÃO DA FAIXA BRANCA SUPERIOR (HEADER) --- */
+    header[data-testid="stHeader"] {{
+        background-color: transparent !important;
+        background: transparent !important;
+        box-shadow: none !important;
+    }}
+    /* Pinta os ícones do menu de branco para não sumirem no fundo escuro */
+    header[data-testid="stHeader"] * {{
+        color: #E2E8F0 !important;
+    }}
+    /* Ajusta o espaçamento do topo para o conteúdo não ficar escondido */
+    .block-container {{
+        padding-top: 1rem !important;
+        padding-bottom: 5rem !important;
+    }}
+
     /* --- FUNDO E TIPOGRAFIA --- */
     .stApp {{
-        background-image: linear-gradient(rgba(10, 15, 30, 0.95), rgba(10, 15, 30, 0.95)), url('{BACKGROUND_IMAGE}');
+        background-image: linear-gradient(rgba(10, 15, 30, 0.92), rgba(10, 15, 30, 0.92)), url('{BACKGROUND_IMAGE}');
         background-size: cover;
         background-position: center;
         background-attachment: fixed;
@@ -33,33 +50,29 @@ st.markdown(f"""
     }}
     
     .highlight {{
-        color: #4ADE80 !important; /* Verde Neon Principal */
+        color: #4ADE80 !important; /* Verde Neon */
         font-weight: bold;
         text-shadow: 0 0 10px rgba(74, 222, 128, 0.4);
     }}
 
-    /* Remove espaçamentos extras do Streamlit */
-    .block-container {{
-        padding-top: 2rem;
-        padding-bottom: 5rem;
-    }}
+    /* Remove fundos extras dos containers */
     div[data-testid="stVerticalBlock"] > div[style*="background-color"] {{
         background-color: transparent !important;
     }}
     
-    /* --- NOVOS CARDS TECNOLÓGICOS --- */
+    /* --- CARDS TECNOLÓGICOS (GRID) --- */
     .tech-card {{
-        background: rgba(20, 30, 50, 0.7);
+        background: rgba(20, 30, 50, 0.6);
         backdrop-filter: blur(15px);
-        /* Borda completa verde neon brilhante */
         border: 2px solid #4ADE80;
         box-shadow: 0 0 15px rgba(74, 222, 128, 0.2), inset 0 0 15px rgba(74, 222, 128, 0.1);
         border-radius: 12px;
-        overflow: hidden; /* Para a imagem do robô não sair do card */
+        overflow: hidden;
         transition: all 0.3s ease;
-        height: 100%; /* Garante altura igual na grid */
+        height: 100%;
         display: flex;
         flex-direction: column;
+        margin-bottom: 20px;
     }}
     
     .tech-card:hover {{
@@ -67,9 +80,8 @@ st.markdown(f"""
         box-shadow: 0 0 30px rgba(74, 222, 128, 0.5), inset 0 0 20px rgba(74, 222, 128, 0.2);
     }}
 
-    /* Área da imagem do robô */
     .card-image-container {{
-        height: 150px;
+        height: 160px;
         overflow: hidden;
         position: relative;
         border-bottom: 1px solid rgba(74, 222, 128, 0.3);
@@ -80,23 +92,22 @@ st.markdown(f"""
         height: 100%;
         object-fit: cover;
         opacity: 0.8;
-        transition: opacity 0.3s;
+        transition: opacity 0.3s, transform 0.5s;
     }}
     .tech-card:hover .card-image {{
         opacity: 1;
+        transform: scale(1.05);
     }}
     
-    /* Área de conteúdo do card */
     .card-content {{
         padding: 20px;
-        flex-grow: 1; /* Ocupa o espaço restante */
+        flex-grow: 1;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
     }}
 
-    /* --- BOTÃO NEON CUSTOMIZADO (Substitui o nativo) --- */
-    /* Este é um botão HTML puro, garantindo controle total da cor */
+    /* --- BOTÃO NEON CUSTOMIZADO (Para os Cards) --- */
     .neon-button {{
         background: transparent;
         color: #4ADE80;
@@ -119,7 +130,7 @@ st.markdown(f"""
     
     .neon-button:hover {{
         background: #4ADE80;
-        color: #0A0F1E; /* Fundo escuro quando ativo */
+        color: #0A0F1E;
         box-shadow: 0 0 30px rgba(74, 222, 128, 0.7);
     }}
 
@@ -137,15 +148,37 @@ st.markdown(f"""
         box-shadow: 0 0 20px rgba(74, 222, 128, 0.4) !important;
         outline: none;
     }}
-    /* Estiliza o botão de login nativo para combinar */
+
+    /* --- 2. CORREÇÃO DEFINITIVA DO BOTÃO DE LOGIN (CSS FORCE) --- */
     div[data-testid="stFormButton"] > button {{
-         background: transparent !important;
-         border: 2px solid #4ADE80 !important;
-         color: #4ADE80 !important;
+        background-color: transparent !important;
+        color: #4ADE80 !important;
+        border: 2px solid #4ADE80 !important;
+        border-radius: 4px !important;
+        font-family: 'Roboto Mono', monospace !important;
+        font-weight: 700 !important;
+        letter-spacing: 2px !important;
+        text-transform: uppercase !important;
+        transition: all 0.3s ease !important;
+        box-shadow: 0 0 10px rgba(74, 222, 128, 0.2) !important;
     }}
+
     div[data-testid="stFormButton"] > button:hover {{
-         background: #4ADE80 !important;
-         color: #000 !important;
+         background-color: #4ADE80 !important;
+         color: #0A0F1E !important; /* Texto preto/escuro no hover */
+         box-shadow: 0 0 30px rgba(74, 222, 128, 0.6) !important;
+    }}
+    
+    /* Prevenir estado ativo branco */
+    div[data-testid="stFormButton"] > button:active,
+    div[data-testid="stFormButton"] > button:focus {{
+        background-color: transparent !important;
+        color: #4ADE80 !important;
+        border-color: #4ADE80 !important;
+    }}
+
+    div[data-testid="stFormButton"] > button * {{
+         color: inherit !important;
     }}
 
 </style>
@@ -165,7 +198,7 @@ APPS = [
         "desc": "Sistema Neural para Artigos, Aulas e TCC's.",
         "icon": "📚"
     },
-     # Adicione mais apps aqui, eles se organizarão automaticamente na grid
+     # Novos apps entram aqui
 ]
 
 # --- Sistema de Login ---
@@ -176,12 +209,12 @@ def check_password():
     if st.session_state.password_correct:
         return True
 
-    # Container centralizado para o login
-    col_spacer_l, col_login, col_spacer_r = st.columns([1, 2, 1])
+    # Layout centralizado do Login
+    col_spacer_l, col_login, col_spacer_r = st.columns([1.5, 1, 1.5])
     with col_login:
         st.markdown("<br><br>", unsafe_allow_html=True)
         st.markdown(f"<div style='text-align: center; font-size: 3rem; letter-spacing: 4px; text-shadow: 0 0 20px rgba(74,222,128,0.5);'>DEV.JUR <span class='highlight'>OS</span></div>", unsafe_allow_html=True)
-        st.markdown("<p style='text-align: center; opacity: 0.8; font-size: 0.9rem; letter-spacing: 2px; margin-bottom: 40px;'>SECURE ACCESS TERMINAL // V3.0</p>", unsafe_allow_html=True)
+        st.markdown("<p style='text-align: center; opacity: 0.8; font-size: 0.9rem; letter-spacing: 2px; margin-bottom: 40px;'>SECURE ACCESS TERMINAL // V3.1</p>", unsafe_allow_html=True)
         
         with st.form("login_form"):
             password = st.text_input("SENHA", type="password", label_visibility="collapsed", placeholder=">> INSERIR CHAVE DE ACESSO <<")
@@ -193,7 +226,7 @@ def check_password():
                     st.session_state.password_correct = True
                     st.rerun()
                 else:
-                    st.error("ERRO: ACESSO NEGADO // TENTATIVA REGISTRADA")
+                    st.error("ERRO: ACESSO NEGADO")
     return False
 
 # --- Renderização do Dashboard (Grid System) ---
@@ -207,7 +240,7 @@ if check_password():
         </div>
         <div style='text-align:right;'>
             <strong style="font-size: 1.2rem;">DEV.JUR CORE</strong><br>
-            <span style='font-size: 0.8rem; opacity: 0.8; letter-spacing: 1px;'>V 3.0 CYBERPUNK GRID</span>
+            <span style='font-size: 0.8rem; opacity: 0.8; letter-spacing: 1px;'>V 3.1 CYBERPUNK GRID</span>
         </div>
     </div>
     """, unsafe_allow_html=True)
@@ -215,20 +248,16 @@ if check_password():
     st.markdown("<h2 style='text-align: center; margin-bottom: 40px; letter-spacing: 3px; text-transform: uppercase;'>Módulos Disponíveis</h2>", unsafe_allow_html=True)
 
     # --- LÓGICA DA GRID (Lado a Lado) ---
-    # Cria linhas com 2 colunas cada
     for i in range(0, len(APPS), 2):
-        cols = st.columns(2) # Define 2 colunas por linha
-        
-        # Processa os apps em pares
+        cols = st.columns(2)
         for j in range(2):
             if i + j < len(APPS):
                 app = APPS[i+j]
                 with cols[j]:
-                    # ESTRUTURA HTML DO CARD TECNOLÓGICO
                     st.markdown(f"""
                     <div class="tech-card">
                         <div class="card-image-container">
-                            <img src="{ROBOT_IMAGE}" class="card-image">
+                            <img src="{CARD_HEADER_IMAGE}" class="card-image">
                         </div>
                         <div class="card-content">
                             <div>
@@ -245,5 +274,4 @@ if check_password():
                     </div>
                     """, unsafe_allow_html=True)
 
-    # Footer
     st.markdown("<br><br><div style='text-align: center; font-size: 0.8rem; opacity: 0.6; border-top: 1px solid rgba(74,222,128,0.2); padding-top: 30px; letter-spacing: 2px;'>DEV.JUR ARCHITECTURE | SECURE QUANTUM LINK</div>", unsafe_allow_html=True)
